@@ -23,6 +23,17 @@ TBody * Body_Create( TShape * shape ) {
 
 /*
 ====================================
+Body_Free
+====================================
+*/
+void Body_Free( TBody * body ) {
+    List_Remove( &gDynamicsWorld.bodies, body );
+    ConvexShape_Delete( body->shape );
+    free( body );
+}
+
+/*
+====================================
 Body_ClearContacts
 ====================================
 */

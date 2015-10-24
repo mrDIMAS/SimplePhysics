@@ -27,6 +27,7 @@ typedef struct TBody {
 } TBody;
 
 TBody * Body_Create( TShape * shape );
+void Body_Free( TBody * body );
 void Body_ClearContacts( TBody * body );
 void Body_AddContact( TBody * body, TContact contact );
 void Body_ProcessCollision( TBody * body1, TBody * body2, TShape * shape );

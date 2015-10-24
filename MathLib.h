@@ -52,6 +52,14 @@ static inline float Math_DistanceToOrigin( TVec3 normal, TVec3 point ) {
     return Vec3_Dot( normal, point );
 }
   
+/*
+====================================
+Math_Sqr
+====================================
+*/ 
+static inline float Math_Sqr( float v ) {
+    return v * v;
+}
 
 
 #endif

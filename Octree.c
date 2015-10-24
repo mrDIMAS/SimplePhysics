@@ -6,7 +6,7 @@
 
 #include "Octree.h"
 #include "GJK.h"
-#include <float.h>
+#include "MathLib.h"
 
 /*
 ====================================
@@ -54,10 +54,32 @@ void Octree_Build( TOctree * octree, TVec3 offset, TVec3 * vertices, TSPFace * f
 
     Octree_BuildRecursiveInternal( octree->root, offset, vertices, faces, faceCount );
 }
- 
-static inline float squared(float v) {
-    return v * v;
+
+/*
+====================================
+Octree_DestroyRecursiveInternal
+====================================
+*/ 
+void Octree_DestroyRecursiveInternal( TOctreeNode * node ) {
+    for( int i = 0; i < 8; i++ ) {
+        Octree_DestroyRecursiveInternal( node->childs[i] );
+    }
+    free( node->faces );
+    free( node );
 }
+
+
+/*
+====================================
+Octree_Destroy
+====================================
+*/ 
+void Octree_Destroy( TOctree * octree ) {
+    Octree_DestroyRecursiveInternal( octree->root );
+    free( octree->resultFaceList );    
+}
+
+
 
 /*
 ====================================
@@ -65,25 +87,25 @@ Octree_NodeIntersectSphere
 ====================================
 */
 char Octree_NodeIntersectSphere( TOctreeNode * node, TVec3 pos, float radius ) {
-    float r2 = squared( radius );
+    float r2 = Math_Sqr( radius );
     float dmin = 0;
 
     if( pos.x < node->min.x ) {
-        dmin += squared( pos.x - node->min.x );
+        dmin += Math_Sqr( pos.x - node->min.x );
     } else if( pos.x > node->max.x ) {
-        dmin += squared( pos.x - node->max.x );
+        dmin += Math_Sqr( pos.x - node->max.x );
     }
 
     if( pos.y < node->min.y ) {
-        dmin += squared( pos.y - node->min.y );
+        dmin += Math_Sqr( pos.y - node->min.y );
     } else if( pos.y > node->max.y ) {
-        dmin += squared( pos.y - node->max.y );
+        dmin += Math_Sqr( pos.y - node->max.y );
     }
 
     if( pos.z < node->min.z ) {
-        dmin += squared( pos.z - node->min.z );
+        dmin += Math_Sqr( pos.z - node->min.z );
     } else if( pos.z > node->max.z ) {
-        dmin += squared( pos.z - node->max.z );
+        dmin += Math_Sqr( pos.z - node->max.z );
     }
 
     char sphereInside = (pos.x >= node->min.x) && (pos.x <= node->max.x) &&

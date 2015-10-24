@@ -182,6 +182,14 @@ void ConvexShape_Delete( TShape * shape ) {
         }
         free( shape->convex );
     }
+    if( shape->triMesh ) {
+        if( shape->triMesh->faces ) {
+            free( shape->triMesh->faces );
+        }
+        if( shape->triMesh->vertices ) {
+            free( shape->triMesh->vertices );
+        }
+    }
     if( shape->sphere ) {
         free( shape->sphere );
     }

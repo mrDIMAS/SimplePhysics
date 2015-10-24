@@ -21,14 +21,13 @@ void Dynamics_SolveCollisions() {
         Body_ClearContacts( body );
         bool bodyIsDynamic = body->shape->triMesh == NULL;
         if( bodyIsDynamic ) {
-            body->position = Vec3_Add( body->position, body->linearVelocity );  
-            body->linearVelocity = Vec3_Add( body->linearVelocity, gravity );                                           
+            body->linearVelocity = Vec3_Add( body->linearVelocity, gravity ); 
+            body->position = Vec3_Add( body->position, body->linearVelocity );                                                       
             for_each( TBody, otherBody, gDynamicsWorld.bodies ) {
                 if( body != otherBody ) {
                     Body_SolveCollision( body, otherBody );
                 }
             }     
-
         }
     }
 }

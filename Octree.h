@@ -27,6 +27,7 @@ typedef struct SOctree {
 } TOctree;
 
 void Octree_Build( TOctree * octree, TVec3 offset, TVec3 * vertices, TSPFace * faces, int faceCount );
+void Octree_Destroy( TOctree * octree );
 void Octree_BuildRecursiveInternal( TOctreeNode * node, TVec3 offset, TVec3 * vertices, TSPFace * faces, int faceCount );
 void Octree_SplitNode( TOctreeNode * node );
 
