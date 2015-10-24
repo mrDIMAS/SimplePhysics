@@ -298,6 +298,8 @@ main
 ====================================
 */  
 int main(int argc, char **argv) {
+    SP_World_Create();
+    
     glutInit(&argc, argv);
     glutInitDisplayMode( GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA );
     glutInitWindowSize( GetSystemMetrics( SM_CXSCREEN ), GetSystemMetrics( SM_CYSCREEN ) );
@@ -309,5 +311,7 @@ int main(int argc, char **argv) {
     Renderer_Init();
  
     glutMainLoop();
+    
+    SP_World_Destroy();
 }
 

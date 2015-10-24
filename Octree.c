@@ -14,7 +14,7 @@ Octree_Build
 ====================================
 */ 
 void Octree_Build( TOctree * octree, TVec3 offset, TVec3 * vertices, TSPFace * faces, int faceCount ) {
-    octree->root = calloc( 1, sizeof( TOctreeNode ));
+    octree->root = Memory_New( TOctreeNode );
 
     octree->root->min = Vec3_Set( FLT_MAX, FLT_MAX, FLT_MAX );
     octree->root->max = Vec3_Set( -FLT_MAX, -FLT_MAX, -FLT_MAX );
@@ -50,7 +50,7 @@ void Octree_Build( TOctree * octree, TVec3 offset, TVec3 * vertices, TSPFace * f
     }
 
     octree->resultFaceCount = faceCount * 8;
-    octree->resultFaceList = calloc( octree->resultFaceCount, sizeof( TSPFace ));
+    octree->resultFaceList = Memory_AllocateClean( octree->resultFaceCount * sizeof( TSPFace ));
 
     Octree_BuildRecursiveInternal( octree->root, offset, vertices, faces, faceCount );
 }
@@ -64,8 +64,8 @@ void Octree_DestroyRecursiveInternal( TOctreeNode * node ) {
     for( int i = 0; i < 8; i++ ) {
         Octree_DestroyRecursiveInternal( node->childs[i] );
     }
-    free( node->faces );
-    free( node );
+    Memory_Free( node->faces );
+    Memory_Free( node );
 }
 
 
@@ -76,7 +76,7 @@ Octree_Destroy
 */ 
 void Octree_Destroy( TOctree * octree ) {
     Octree_DestroyRecursiveInternal( octree->root );
-    free( octree->resultFaceList );    
+    Memory_Free( octree->resultFaceList );    
 }
 
 
@@ -161,7 +161,7 @@ Octree_BuildRecursiveInternal
 void Octree_BuildRecursiveInternal( TOctreeNode * node, TVec3 offset, TVec3 * vertices, TSPFace * faces, int faceCount ) {
     if( faceCount < 96 ) {        
         node->faceCount = faceCount;
-        node->faces = malloc( sizeof( TSPFace ) * faceCount );
+        node->faces = Memory_Allocate( sizeof( TSPFace ) * faceCount );
         memcpy( node->faces, faces, sizeof( TSPFace ) * faceCount );
         return;
     }
@@ -197,7 +197,7 @@ void Octree_BuildRecursiveInternal( TOctreeNode * node, TVec3 offset, TVec3 * ve
 
         Octree_BuildRecursiveInternal( child, offset, vertices, tempFaces, tempFaceCount );
 
-        free( tempFaces );
+        Memory_Free( tempFaces );
         
         ConvexShape_Delete( box );
     }
@@ -212,7 +212,7 @@ void Octree_SplitNode( TOctreeNode * node ) {
     TVec3 center = Vec3_Middle( node->min, node->max );
 
     for(int i = 0; i < 8; i++) {
-        node->childs[i] = calloc( 1, sizeof( TOctreeNode ));
+        node->childs[i] = Memory_New( TOctreeNode );
     }    
 
     node->childs[0]->min = Vec3_Set( node->min.x, node->min.y, node->min.z );    
@@ -346,6 +346,11 @@ bool Octree_TraceRayRecursiveInternal( TOctree * octree, TOctreeNode * node, TVe
     return true;
 }
 
+/*
+====================================
+Octree_TraceRay
+====================================
+*/
 void Octree_TraceRay( TOctree * octree, TVec3 rayBegin, TVec3 rayDir ) {
     octree->resultFaceCount = 0;
     Octree_TraceRayRecursiveInternal( octree, octree->root, rayBegin, rayDir );

@@ -13,7 +13,7 @@ Body_Create
 ====================================
 */
 TBody * Body_Create( TShape * shape ) {
-    TBody * body = calloc( 1, sizeof( TBody ));
+    TBody * body = Memory_New( TBody );
     body->position = shape->position;
     body->shape = shape;
     body->anisotropicFriction = Vec3_Set( 0.01f, 0.01f, 0.01f );
@@ -29,7 +29,7 @@ Body_Free
 void Body_Free( TBody * body ) {
     List_Remove( &gDynamicsWorld.bodies, body );
     ConvexShape_Delete( body->shape );
-    free( body );
+    Memory_Free( body );
 }
 
 /*

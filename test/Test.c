@@ -218,7 +218,7 @@ void Renderer_Init() {
     body4 = Body_Create( currentShape4 );
     body4->position = Vec3_Set( 0.0f, 5, 0 );  
      
-    Dynamics_SolveCollisions();
+    DynamicsWorld_SolveCollisions();
 }
 
 

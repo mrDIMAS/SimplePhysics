@@ -5,6 +5,7 @@
 //////////////////////////////////////////
 
 #include "List.h"
+#include "Memory.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <float.h>
@@ -31,7 +32,7 @@ void List_Free( TList * list ) {
     while( current ) {
 		TListNode * del = current;
         current = current->next;
-		free( del );
+		Memory_Free( del );
     }
 }
 
@@ -41,7 +42,7 @@ List_Add
 ====================================
 */
 void List_Add( TList * list, void * data ) {
-    TListNode * newElement = malloc( sizeof( TListNode ));
+    TListNode * newElement = Memory_New( TListNode );
     newElement->data = data;
     newElement->next = NULL;
     newElement->prev = list->tail;
@@ -115,9 +116,9 @@ void List_RemoveNth( TList * list, int n, char freeData ) {
                     list->tail = NULL;
                 }
             }
-            free( current );
+            Memory_Free( current );
             if( freeData ) {
-                free( current->data );
+                Memory_Free( current->data );
             }
             list->size--;
             break;
@@ -137,11 +138,11 @@ void List_Clear( TList * list, char freeData ) {
     while( current ) {
         if( freeData ) {
             if( current->data ) {
-                free( current->data );
+                Memory_Free( current->data );
             }
         }
         TListNode * next = current->next;
-        free( current );
+        Memory_Free( current );
         current = next;
     }
     list->size = 0;
@@ -196,7 +197,7 @@ TListNode * List_Remove( TList * list, void * data ) {
                     list->tail = NULL;
                 }
             }
-            free( current );
+            Memory_Free( current );
             list->size--;
             break;
         }

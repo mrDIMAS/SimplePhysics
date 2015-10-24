@@ -14,8 +14,9 @@ typedef struct TDynamicsWorld {
     TList bodies;
 } TDynamicsWorld;
 
-void Dynamics_SolveCollisions();
-struct TBody * Dynamics_TraceRay( TVec3 rayBegin, TVec3 rayDir, bool infiniteRay, int outCountContacts, TSPRayTraceResult * outResultList );
+void DynamicsWorld_SolveCollisions();
+struct TBody * DynamicsWorld_TraceRay( TVec3 rayBegin, TVec3 rayDir, bool infiniteRay, int outCountContacts, TSPRayTraceResult * outResultList );
+void DynamicsWorld_CleanUp( );
 
 extern TDynamicsWorld gDynamicsWorld;
 

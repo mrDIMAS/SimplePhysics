@@ -15,7 +15,7 @@ TDynamicsWorld gDynamicsWorld;
 Dynamics_SolveCollisions
 ====================================
 */
-void Dynamics_SolveCollisions() {
+void DynamicsWorld_SolveCollisions() {
     static TVec3 gravity = { .x = 0.0f, .y = -0.000777, .z = 0.0f };
     for_each( TBody, body, gDynamicsWorld.bodies ) {
         Body_ClearContacts( body );
@@ -37,7 +37,7 @@ void Dynamics_SolveCollisions() {
 Dynamics_TraceRay
 ====================================
 */
-TBody * Dynamics_TraceRay( TVec3 rayBegin, TVec3 rayDir, bool infiniteRay, int outCountContacts, TSPRayTraceResult * outResultList ) {
+TBody * DynamicsWorld_TraceRay( TVec3 rayBegin, TVec3 rayDir, bool infiniteRay, int outCountContacts, TSPRayTraceResult * outResultList ) {
     for_each( TBody, body, gDynamicsWorld.bodies ) {
         TShape * shape = body->shape;
         Shape_TraceRay( shape, rayBegin, rayDir, infiniteRay, outCountContacts, outResultList );
@@ -49,4 +49,17 @@ TBody * Dynamics_TraceRay( TVec3 rayBegin, TVec3 rayDir, bool infiniteRay, int o
         }
     }
     return NULL;
+}
+
+/*
+====================================
+DynamicsWorld_CleanUp
+====================================
+*/
+void DynamicsWorld_CleanUp() {
+    while( gDynamicsWorld.bodies.head ) {
+        Body_Free( gDynamicsWorld.bodies.head->data );
+    }
+    
+    Memory_CollectGarbage();
 }

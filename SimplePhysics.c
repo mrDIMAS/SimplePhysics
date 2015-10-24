@@ -24,6 +24,7 @@ SP_Shutdown
 ====================================
 */ 
 int SP_World_Destroy( void ) {
+    DynamicsWorld_CleanUp();
     return true;
 } 
 
@@ -300,7 +301,7 @@ SP_Simulate
 ====================================
 */ 
 void SP_World_Simulate() {
-    Dynamics_SolveCollisions();
+    DynamicsWorld_SolveCollisions();
 }
 
 /*

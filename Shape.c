@@ -32,7 +32,7 @@ Shape_Create
 ====================================
 */
 TShape * Shape_Create( ) {
-    TShape * shape = calloc( 1, sizeof( TShape ));
+    TShape * shape = Memory_New( TShape );
     shape->localScale = Vec3_Set( 1.0f, 1.0f, 1.0f );
     return shape;
 }
@@ -44,7 +44,7 @@ ConvexShape_CreateSphere
 */
 TShape * ConvexShape_CreateSphere( TVec3 position, float radius ) {
     TShape * shape = Shape_Create();
-    shape->sphere = calloc( 1, sizeof( TSphereShape ));    
+    shape->sphere = Memory_New( TSphereShape );    
     shape->position = position;
     shape->sphere->radius = radius;
     
@@ -61,10 +61,10 @@ ConvexShape_Delete
 */ 
 TShape * ConvexShape_CreateBox( TVec3 min, TVec3 max ) {
     TShape * shape = Shape_Create();
-    shape->convex = calloc( 1, sizeof( TConvexShape ));    
+    shape->convex = Memory_New( TConvexShape );    
 
     shape->convex->count = 8;
-    shape->convex->points = malloc( shape->convex->count * sizeof( TVec3 ));
+    shape->convex->points = Memory_Allocate( shape->convex->count * sizeof( TVec3 ));
     
     shape->convex->points[0] = Vec3_Set( min.x, min.y, min.z );   
     shape->convex->points[1] = Vec3_Set( min.x, min.y, max.z );
@@ -149,21 +149,21 @@ ConvexShape_Delete
 */ 
 TShape * ConvexShape_CreateFromMemory( int vertexCount, TVec3 * vertices, int faceCount, TSPFace * faces ) {
     TShape * shape = Shape_Create();
-    shape->convex = calloc( 1, sizeof( TConvexShape ));    
+    shape->convex = Memory_New( TConvexShape );    
 
     shape->convex->count = vertexCount;
-    shape->convex->points = calloc( shape->convex->count, sizeof( TVec3 ));
+    shape->convex->points = Memory_AllocateClean( shape->convex->count * sizeof( TVec3 ));
     memcpy( shape->convex->points, vertices, vertexCount * sizeof( TVec3 ));
     
     if( faces && faceCount > 0 ) {
         shape->convex->faceCount = faceCount; 
-        shape->convex->faces = calloc( shape->convex->faceCount, sizeof( TSPFace ));
+        shape->convex->faces = Memory_AllocateClean( shape->convex->faceCount * sizeof( TSPFace ));
         memcpy( shape->convex->faces, faces, faceCount * sizeof( TSPFace ));
     }
     
     shape->boundingRadius = ConvexShape_CalculateCircumcircleRadius( shape );
     shape->center = ConvexShape_CalculateCenter( shape );
-    
+
     return shape;
 }
 
@@ -175,25 +175,25 @@ ConvexShape_Delete
 void ConvexShape_Delete( TShape * shape ) {
     if( shape->convex ) {
         if( shape->convex->faces ) {
-            free( shape->convex->faces );
+            Memory_Free( shape->convex->faces );
         }
         if( shape->convex->points ) {
-            free( shape->convex->points );
+            Memory_Free( shape->convex->points );
         }
-        free( shape->convex );
+        Memory_Free( shape->convex );
     }
     if( shape->triMesh ) {
         if( shape->triMesh->faces ) {
-            free( shape->triMesh->faces );
+            Memory_Free( shape->triMesh->faces );
         }
         if( shape->triMesh->vertices ) {
-            free( shape->triMesh->vertices );
+            Memory_Free( shape->triMesh->vertices );
         }
     }
     if( shape->sphere ) {
-        free( shape->sphere );
+        Memory_Free( shape->sphere );
     }
-    free( shape );
+    Memory_Free( shape );
 }
 
 /*
@@ -203,18 +203,18 @@ TriangleMesh_CreateFromMemory
 */
 TShape * TriangleMesh_CreateFromMemory( int vertexCount, TVec3 * vertices, int faceCount, TSPFace * faces ) {
     TShape * shape = Shape_Create();
-    TTriangleMeshShape * triMesh = calloc( 1, sizeof( TTriangleMeshShape ));
+    TTriangleMeshShape * triMesh = Memory_New( TTriangleMeshShape );
     
     triMesh->vertexCount = vertexCount;
-    triMesh->vertices = calloc( vertexCount, sizeof( TVec3 ));
+    triMesh->vertices = Memory_AllocateClean( vertexCount * sizeof( TVec3 ));
     memcpy( triMesh->vertices, vertices, vertexCount * sizeof( TVec3 ));
 
     triMesh->faceCount = faceCount;
-    triMesh->faces = calloc( triMesh->faceCount, sizeof( TSPFace ));
+    triMesh->faces = Memory_AllocateClean( triMesh->faceCount * sizeof( TSPFace ));
     memcpy( triMesh->faces, faces, faceCount * sizeof( TSPFace ));
     
     Octree_Build( &triMesh->octree, Vec3_Set( 0, 0, 0 ), vertices, faces, faceCount );
-    
+ 
     shape->triMesh = triMesh;
     return shape;
 }

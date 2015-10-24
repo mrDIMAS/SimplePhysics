@@ -14,6 +14,7 @@
 #include <string.h> 
 #include "Vector3.h"
 #include "List.h"
+#include "Memory.h"
 
 typedef struct TSimulationParameters {
     int gjkConvergenceLimit;
