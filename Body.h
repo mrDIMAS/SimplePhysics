@@ -24,6 +24,7 @@ typedef struct TBody {
     int contactCount;
     TVec3 anisotropicFriction;
     int collisionGroup;
+    TVec3 gravity;
 } TBody;
 
 TBody * Body_Create( TShape * shape );
@@ -32,6 +33,6 @@ void Body_ClearContacts( TBody * body );
 void Body_AddContact( TBody * body, TContact contact );
 void Body_ProcessCollision( TBody * body1, TBody * body2, TShape * shape );
 void Body_SolveCollision( TBody * body1, TBody * body2 );
-
+void Body_SetGravity( TBody * body, TVec3 gravity );
 
 #endif

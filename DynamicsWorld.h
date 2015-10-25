@@ -12,11 +12,13 @@
 
 typedef struct TDynamicsWorld {
     TList bodies;
+    TVec3 gravity;
 } TDynamicsWorld;
 
 void DynamicsWorld_SolveCollisions();
 struct TBody * DynamicsWorld_TraceRay( TVec3 rayBegin, TVec3 rayDir, bool infiniteRay, int outCountContacts, TSPRayTraceResult * outResultList );
 void DynamicsWorld_CleanUp( );
+void DynamicsWorld_SetGravity( TVec3 gravity );
 
 extern TDynamicsWorld gDynamicsWorld;
 

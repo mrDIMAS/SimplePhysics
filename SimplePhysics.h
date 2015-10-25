@@ -32,12 +32,12 @@ typedef struct TSPRayTraceResult {
     TSPBody body;
 } TSPRayTraceResult;
 
-typedef enum EShapeType {
+typedef enum ESPShapeType {
     SPSHAPE_BAD,
     SPSHAPE_CONVEX,
     SPSHAPE_SPHERE,
     SPSHAPE_TRIMESH,
-} EShapeType;
+} ESPShapeType;
 
 /* World creation */
 int SP_World_Create( void );
@@ -45,6 +45,10 @@ int SP_World_Destroy( void );
 
 /* World simulation */
 void SP_World_Simulate();
+
+/* World gravity */
+void SP_World_SetGravity( TVec3 gravity );
+TVec3 SP_World_GetGravity( );
 
 /* Shape creation */
 TSPShape SP_Shape_CreateConvex( int vertexCount, TVec3 * vertices );
@@ -70,7 +74,7 @@ TVec3 SP_Shape_GetAABBMin( TSPShape shape );
 TVec3 SP_Shape_GetAABBMax( TSPShape shape );
 
 /* Shape type */
-EShapeType SP_Shape_GetType( TSPShape shape );
+ESPShapeType SP_Shape_GetType( TSPShape shape );
 
 /* Sphere shape */
 float SP_Shape_Sphere_GetRadius( TSPShape shape );
@@ -89,6 +93,10 @@ TVec3 SP_Body_GetLinearVelocity( TSPBody body );
 /* Body anisotropic friction */
 void SP_Body_SetAnisotropicFriction( TSPBody body, TVec3 anisoFrict );
 TVec3 SP_Body_GetAnisotropicFriction( TSPBody body );
+
+/* Body gravity */
+void SP_Body_SetGravity( TSPBody body, TVec3 gravity );
+TVec3 SP_Body_GetGravity( TSPBody body );
 
 /* Body contacts */
 int SP_Body_GetContactCount( TSPBody body );

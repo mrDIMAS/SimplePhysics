@@ -17,6 +17,7 @@ TBody * Body_Create( TShape * shape ) {
     body->position = shape->position;
     body->shape = shape;
     body->anisotropicFriction = Vec3_Set( 0.01f, 0.01f, 0.01f );
+    body->gravity = gDynamicsWorld.gravity;
     List_Add( &gDynamicsWorld.bodies, body );    
     return body;
 }
@@ -58,14 +59,14 @@ Body_ProcessCollision
 ====================================
 */
 void Body_ProcessCollision( TBody * body1, TBody * body2, TShape * shape ) {
-    TSimplex finalSimplex;
+   TSimplex finalSimplex;
     TContact contact;
     TPolytope polytope;
     // select shape
     if( body2 ) {
         shape = body2->shape;
     }
-    while( GJK_IsIntersects( body1->shape, shape, &finalSimplex )) {         
+    if( GJK_IsIntersects( body1->shape, shape, &finalSimplex )) {         
         Polytope_SetFromSimplex( &polytope, &finalSimplex );        
         if( EPA_ComputeContact( &polytope, body1->shape, shape, body2, &contact )) {
             TVec3 penetrationVec;
@@ -83,8 +84,8 @@ void Body_ProcessCollision( TBody * body1, TBody * body2, TShape * shape ) {
             body1->linearVelocity = Vec3_Mul( body1->linearVelocity, Vec3_Sub( Vec3_One(), body1->anisotropicFriction ));
             body1->shape->position = body1->position;       
             Body_AddContact( body1, contact );
-        } else {  
-            break;
+        //} else {  
+        //    break;
         }                 
     }
 } 
@@ -105,6 +106,7 @@ void Body_SolveCollision( TBody * body1, TBody * body2 ) {
     body2->shape->position = body2->position;
     
     if( body2->shape->triMesh ) { 
+        
         TTriangleMeshShape * triMesh = body2->shape->triMesh;                
         Octree_TraceSphere( &triMesh->octree, Vec3_Add( body1->position, body1->shape->center ), body1->shape->boundingRadius );         
         for( int i = 0; i < triMesh->octree.resultFaceCount; i++ ) {            
@@ -130,3 +132,11 @@ void Body_SolveCollision( TBody * body1, TBody * body2 ) {
     }
 }
 
+/*
+====================================
+Body_SetGravity
+====================================
+*/
+void Body_SetGravity( TBody * body, TVec3 gravity ) {
+    body->gravity = Vec3_Scale( gravity, 1.0f / ( 60.0f * 60.0f ));
+}

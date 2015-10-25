@@ -110,5 +110,4 @@ TVec3 Vec3_Project( TVec3 a, TVec3 planeNormal ) {
     }
     float t = Vec3_Dot( a, planeNormal ) / nlen;   
     return Vec3_Sub( a, Vec3_Scale( planeNormal, t ));
-    //return Vec3_Sub( a, Vec3_Scale( planeNormal, Vec3_Dot( a, planeNormal )));
 }

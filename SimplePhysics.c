@@ -30,6 +30,24 @@ int SP_World_Destroy( void ) {
 
 /*
 ====================================
+SP_World_SetGravity
+====================================
+*/ 
+void SP_World_SetGravity( TVec3 gravity ) {
+    DynamicsWorld_SetGravity( gravity );
+}
+
+/*
+====================================
+SP_World_GetGravity
+====================================
+*/ 
+TVec3 SP_World_GetGravity( ) {
+    return gDynamicsWorld.gravity;
+}
+
+/*
+====================================
 SP_Shape_CreateConvex
 ====================================
 */ 
@@ -165,7 +183,7 @@ TVec3 SP_Shape_GetAABBMax( TSPShape shape ) {
 SP_Shape_GetType
 ====================================
 */ 
-EShapeType SP_Shape_GetType( TSPShape shape ) {
+ESPShapeType SP_Shape_GetType( TSPShape shape ) {
     TShape * s = shape;    
     if( s->convex ) {
         return SPSHAPE_CONVEX;
@@ -356,4 +374,22 @@ SP_Body_GetLinearVelocity
 */ 
 TVec3 SP_Body_GetLinearVelocity( TSPBody body ) {
     return ((TBody*)body)->linearVelocity;
+}
+
+/*
+====================================
+SP_Body_SetGravity
+====================================
+*/ 
+void SP_Body_SetGravity( TSPBody body, TVec3 gravity ) {
+    Body_SetGravity( (TBody*)body, gravity );
+}
+
+/*
+====================================
+SP_Body_GetGravity
+====================================
+*/ 
+TVec3 SP_Body_GetGravity( TSPBody body ) {
+    return ((TBody*)body)->gravity;
 }

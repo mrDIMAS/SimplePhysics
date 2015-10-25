@@ -40,7 +40,14 @@ Math_ProjectOriginOntoPlane
 ====================================
 */
 static inline TVec3 Math_ProjectOriginOntoPlane( TVec3 planePoint, TVec3 planeNormal ) {
+    /*
+    planeNormal = Vec3_Normalize( planeNormal );
     return Vec3_Scale( planeNormal, Vec3_Dot( planePoint, planeNormal ));
+    */
+    TVec3 o = Vec3_Zero();
+    TVec3 pq1 = Vec3_Sub( o, planePoint );
+    float t = Vec3_Dot( pq1, planeNormal );
+    return Vec3_Sub( o, Vec3_Scale( planeNormal, t ));
 }
  
 /*

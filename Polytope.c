@@ -27,7 +27,7 @@ void Polytope_ComputeFaceNormal( TPolytope * polytope, int n ) {
     TVec3 b = polytope->vertices[ polytope->faces[ n ].b ].minkowskiDifference;
     TVec3 c = polytope->vertices[ polytope->faces[ n ].c ].minkowskiDifference;
     polytope->faces[n].normal = Vec3_Cross( Vec3_Sub( b, a ), Vec3_Sub( c, a ) );
-    polytope->faces[n].degenerated = Vec3_SqrLength( polytope->faces[n].normal ) < 0.0001;
+    polytope->faces[n].degenerated = Vec3_SqrLength( polytope->faces[n].normal ) < 0.000001;
 }
 
 /*
@@ -38,6 +38,7 @@ Polytope_SetFromSimplex
 void Polytope_SetFromSimplex( TPolytope * polytope, TSimplex * simplex ) {
     polytope->vertexCount = 4;
     polytope->vertices = &gPolytopeVertexCache[0];
+    //memset( polytope->vertices, 0, sizeof( TSupport ) * POLYTOPE_MAX_VERTEX_COUNT );
     for( int i = 0; i < polytope->vertexCount; i++ ) {
         polytope->vertices[i] = simplex->points[i];
     }
@@ -188,7 +189,7 @@ TTriangle Polytope_GetClosestTriangleToOrigin( TPolytope * polytope ) {
         if( polytope->faces[i].degenerated ) {
             continue;
         }        
-        float d = Math_DistanceToOrigin( polytope->faces[i].normal, polytope->vertices[ polytope->faces[ i ].a ].minkowskiDifference );
+        float d = fabsf( Math_DistanceToOrigin( polytope->faces[i].normal, polytope->vertices[ polytope->faces[ i ].a ].minkowskiDifference ));
         if( d < closestDistance ) {
             closestDistance = d;
             closest = i;

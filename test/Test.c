@@ -213,10 +213,12 @@ void Renderer_Init() {
     body2 = Body_Create( currentShape2 );    
     
     body3 = Body_Create( currentShape3 );
-    body3->position = Vec3_Set( 0, 1.5, -0.2 );
+    //body3->position = Vec3_Set( 0, 1.5, -0.2 );
+    body3->position = Vec3_Set( 0, 500.5, 0 );
     
     body4 = Body_Create( currentShape4 );
-    body4->position = Vec3_Set( 0.0f, 5, 0 );  
+    body4->position = Vec3_Set( 0.0f, 1, 0 );  
+    //body4->position = Vec3_Set( 0, 500.5, 0 );
      
     DynamicsWorld_SolveCollisions();
 }
